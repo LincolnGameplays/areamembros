@@ -3,6 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -22,9 +23,16 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
-// Initialize Firebase Authentication and Firestore
+// Initialize Firebase Authentication, Firestore, and Functions
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+export const functions = getFunctions(app);
+
+// Connect to Functions Emulator in development
+if (window.location.hostname === "localhost") {
+    connectFunctionsEmulator(functions, "localhost", 5001);
+    console.log("🔧 Connected to Functions Emulator at localhost:5001");
+}
 
 // Export app for other uses
 export { app, analytics };

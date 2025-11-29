@@ -6,6 +6,7 @@ import { LessonView } from "./pages/LessonView";
 import { ProgressAnalytics } from "./pages/ProgressAnalytics";
 import { Settings } from "./pages/Settings";
 import { Community } from "./pages/Community";
+import { ThankYou } from "./pages/ThankYou";
 import { ParticleVoid } from "./components/background/ParticleVoid";
 import { NoiseOverlay } from "./components/background/NoiseOverlay";
 
@@ -78,6 +79,7 @@ function App() {
                             </ProtectedRoute>
                         }
                     />
+                    <Route path="/obrigado" element={<ThankYou />} />
                     <Route path="*" element={<Navigate to="/login" />} />
                 </Routes>
             </BrowserRouter>
