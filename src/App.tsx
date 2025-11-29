@@ -3,6 +3,9 @@ import { AuthProvider, useAuth } from "./context/AuthContext";
 import { Login } from "./pages/Login";
 import { Dashboard } from "./pages/Dashboard";
 import { LessonView } from "./pages/LessonView";
+import { ProgressAnalytics } from "./pages/ProgressAnalytics";
+import { Settings } from "./pages/Settings";
+import { Community } from "./pages/Community";
 import { ParticleVoid } from "./components/background/ParticleVoid";
 import { NoiseOverlay } from "./components/background/NoiseOverlay";
 
@@ -48,6 +51,30 @@ function App() {
                         element={
                             <ProtectedRoute>
                                 <LessonView />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/analytics"
+                        element={
+                            <ProtectedRoute>
+                                <ProgressAnalytics />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/settings"
+                        element={
+                            <ProtectedRoute>
+                                <Settings />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/community"
+                        element={
+                            <ProtectedRoute>
+                                <Community />
                             </ProtectedRoute>
                         }
                     />

@@ -13,7 +13,7 @@ export const MODULES: Module[] = [
                 id: "m1_l1",
                 title: "O Manifesto Dark",
                 duration: "03:12",
-                videoUrl: "https://vimeo.com/...",
+                videoUrl: "https://www.youtube.com/watch?v=9eLFUAIenQ4",
                 description: "A filosofia por trás do Protocolo Dark"
             },
             {

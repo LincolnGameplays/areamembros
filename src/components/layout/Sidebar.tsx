@@ -12,7 +12,7 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
     { id: "dashboard", label: "Dashboard", icon: Home, path: "/dashboard" },
-    { id: "progress", label: "Progresso", icon: BarChart3, path: "/progress" },
+    { id: "analytics", label: "Progresso", icon: BarChart3, path: "/analytics" },
     { id: "community", label: "Comunidade", icon: Users, path: "/community" },
     { id: "settings", label: "Configurações", icon: Settings, path: "/settings" },
 ];
