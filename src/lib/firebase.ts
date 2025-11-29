@@ -28,11 +28,5 @@ export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const functions = getFunctions(app);
 
-// Connect to Functions Emulator in development
-if (window.location.hostname === "localhost") {
-    connectFunctionsEmulator(functions, "localhost", 5001);
-    console.log("🔧 Connected to Functions Emulator at localhost:5001");
-}
-
 // Export app for other uses
 export { app, analytics };
