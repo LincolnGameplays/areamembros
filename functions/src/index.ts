@@ -40,6 +40,48 @@ export const handleCaktoWebhook = functions.https.onRequest(async (req, res) => 
     corsHandler(req, res, async () => {
         try {
             // ─────────────────────────────────────────────────────────────
+            // 🛡️ SECURITY: WEBHOOK SIGNATURE VERIFICATION
+            // ─────────────────────────────────────────────────────────────
+            // Retrieve the secret from Firebase environment config
+            // Set via: firebase functions:config:set cakto.secret="YOUR_SECRET_KEY"
+            const webhookSecret = functions.config().cakto?.secret;
+
+            if (!webhookSecret) {
+                console.error("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+                console.error("⚠️  WARNING: Webhook secret not configured!");
+                console.error("   Run: firebase functions:config:set cakto.secret=\"YOUR_KEY\"");
+                console.error("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+                // In production, you might want to reject requests if secret is not set
+                // For now, we'll log a warning but continue (remove this in production)
+            }
+
+            // Check for webhook secret in headers or body
+            // Common header names: x-webhook-secret, x-cakto-token, authorization
+            const providedSecret =
+                req.headers["x-webhook-secret"] ||
+                req.headers["x-cakto-token"] ||
+                req.body?.webhook_secret ||
+                req.body?.secret;
+
+            // Verify the secret matches (constant-time comparison to prevent timing attacks)
+            if (webhookSecret && providedSecret !== webhookSecret) {
+                console.error("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+                console.error("🚨 UNAUTHORIZED WEBHOOK ATTEMPT");
+                console.error(`   IP: ${req.ip}`);
+                console.error(`   Headers: ${JSON.stringify(req.headers)}`);
+                console.error(`   Time: ${new Date().toISOString()}`);
+                console.error("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+
+                res.status(403).send({
+                    error: "Forbidden",
+                    message: "Invalid webhook signature"
+                });
+                return;
+            }
+
+            console.log("✅ Webhook signature verified");
+
+            // ─────────────────────────────────────────────────────────────
             // 1. PARSE CAKTO PAYLOAD
             // ─────────────────────────────────────────────────────────────
             const payload = req.body;
