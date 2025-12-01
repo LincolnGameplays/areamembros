@@ -17,7 +17,7 @@ import "react-pdf/dist/Page/TextLayer.css";
 // PDF.JS WORKER SETUP (CDN STRATEGY)
 // ============================================
 // Versão exata compatível com o core 3.11 que muitas vezes vem embutido
-pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
+pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/5.4.296/pdf.worker.min.js`;
 interface SecurePDFViewerProps {
     url: string;
     title: string;
