@@ -31,39 +31,67 @@ export const Sidebar = () => {
         setIsMobileOpen(false);
     };
 
+    const closeMobileMenu = () => setIsMobileOpen(false);
+
     return (
         <>
-            {/* Mobile Hamburger Button */}
+            {/* Mobile Hamburger Button - Hidden on Desktop */}
             <button
                 onClick={toggleMobile}
-                className="md:hidden fixed top-4 left-4 z-[60] w-10 h-10 rounded-lg bg-carbon/95 backdrop-blur-md border border-white/5 flex items-center justify-center text-white hover:border-cyan/50 transition-colors"
+                className="md:hidden fixed top-4 left-4 z-[60] w-12 h-12 rounded-lg bg-[#050505]/95 backdrop-blur-md border border-white/5 flex items-center justify-center text-white hover:border-cyan/50 transition-all duration-300 ease-in-out shadow-lg"
+                aria-label={isMobileOpen ? "Close menu" : "Open menu"}
             >
-                {isMobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                <AnimatePresence mode="wait">
+                    {isMobileOpen ? (
+                        <motion.div
+                            key="close"
+                            initial={{ rotate: -90, opacity: 0 }}
+                            animate={{ rotate: 0, opacity: 1 }}
+                            exit={{ rotate: 90, opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                        >
+                            <X className="w-6 h-6" />
+                        </motion.div>
+                    ) : (
+                        <motion.div
+                            key="menu"
+                            initial={{ rotate: 90, opacity: 0 }}
+                            animate={{ rotate: 0, opacity: 1 }}
+                            exit={{ rotate: -90, opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                        >
+                            <Menu className="w-6 h-6" />
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </button>
 
-            {/* Mobile Overlay */}
+            {/* Backdrop Overlay - Mobile Only (z-40) */}
             <AnimatePresence>
                 {isMobileOpen && (
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        onClick={toggleMobile}
-                        className="md:hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-40"
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        onClick={closeMobileMenu}
+                        className="md:hidden fixed inset-0 bg-black/80 backdrop-blur-md z-40"
+                        aria-hidden="true"
                     />
                 )}
             </AnimatePresence>
 
-            {/* Sidebar */}
+            {/* Sidebar Panel (z-50) */}
             <motion.aside
                 initial={false}
                 animate={{
-                    width: isMobileOpen ? "280px" : isExpanded ? "280px" : "80px",
-                    x: isMobileOpen ? 0 : 0,
+                    // Mobile: 80% width with max 300px | Desktop: 64px collapsed, 256px expanded
+                    width: isMobileOpen ? "min(80vw, 300px)" : isExpanded ? "256px" : "80px",
                 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
                 className={`
                     fixed left-0 top-0 h-screen bg-[#050505]/95 backdrop-blur-md border-r border-white/5 z-50
-                    transition-all duration-300 ease-in-out
+                    transition-transform duration-300 ease-in-out
                     ${isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
                 `}
             >
@@ -74,9 +102,10 @@ export const Sidebar = () => {
                             {(isExpanded || isMobileOpen) ? (
                                 <motion.div
                                     key="expanded"
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    exit={{ opacity: 0 }}
+                                    initial={{ opacity: 0, x: -10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: -10 }}
+                                    transition={{ duration: 0.2 }}
                                     className="flex items-center gap-3"
                                 >
                                     <div className="w-2 h-2 bg-cyan rounded-full animate-pulse" />
@@ -87,29 +116,40 @@ export const Sidebar = () => {
                             ) : (
                                 <motion.div
                                     key="collapsed"
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    exit={{ opacity: 0 }}
+                                    initial={{ opacity: 0, scale: 0.8 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.8 }}
+                                    transition={{ duration: 0.2 }}
                                     className="w-2 h-2 bg-cyan rounded-full animate-pulse mx-auto"
                                 />
                             )}
                         </AnimatePresence>
 
-                        {/* Desktop Toggle Button */}
+                        {/* Desktop Toggle Button - Hidden on Mobile */}
                         <button
                             onClick={toggleExpanded}
-                            className="hidden md:flex w-6 h-6 items-center justify-center text-gray-500 hover:text-cyan transition-colors"
+                            className="hidden md:flex w-8 h-8 items-center justify-center text-gray-500 hover:text-cyan hover:bg-white/5 rounded-md transition-all duration-200"
+                            aria-label={isExpanded ? "Collapse sidebar" : "Expand sidebar"}
                         >
                             {isExpanded ? (
-                                <ChevronLeft className="w-4 h-4" />
+                                <ChevronLeft className="w-5 h-5" />
                             ) : (
-                                <ChevronRight className="w-4 h-4" />
+                                <ChevronRight className="w-5 h-5" />
                             )}
+                        </button>
+
+                        {/* Mobile Close Button (Alternative) - Visible only on mobile when open */}
+                        <button
+                            onClick={closeMobileMenu}
+                            className="md:hidden flex w-8 h-8 items-center justify-center text-gray-500 hover:text-cyan hover:bg-white/5 rounded-md transition-all duration-200"
+                            aria-label="Close sidebar"
+                        >
+                            <X className="w-5 h-5" />
                         </button>
                     </div>
 
                     {/* Navigation Items */}
-                    <nav className="flex-1 py-8 px-4 space-y-2">
+                    <nav className="flex-1 py-8 px-4 space-y-2 overflow-y-auto">
                         {NAV_ITEMS.map((item) => {
                             const Icon = item.icon;
                             const isActive = location.pathname === item.path;
@@ -148,7 +188,8 @@ export const Sidebar = () => {
                                                 initial={{ opacity: 0, width: 0 }}
                                                 animate={{ opacity: 1, width: "auto" }}
                                                 exit={{ opacity: 0, width: 0 }}
-                                                className="font-mono text-sm tracking-wide whitespace-nowrap"
+                                                transition={{ duration: 0.2 }}
+                                                className="font-mono text-sm tracking-wide whitespace-nowrap overflow-hidden"
                                             >
                                                 {item.label}
                                             </motion.span>
@@ -172,6 +213,7 @@ export const Sidebar = () => {
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
                                         exit={{ opacity: 0 }}
+                                        transition={{ duration: 0.2 }}
                                         className="text-xs text-gray-500 font-mono"
                                     >
                                         SISTEMA ONLINE
@@ -183,8 +225,8 @@ export const Sidebar = () => {
                 </div>
             </motion.aside>
 
-            {/* Spacer for Desktop */}
-            <div className={`hidden md:block transition-all duration-300 ${isExpanded ? "w-[280px]" : "w-[80px]"}`} />
+            {/* Spacer for Desktop - Prevents content from being hidden under sidebar */}
+            <div className={`hidden md:block transition-all duration-300 ease-in-out ${isExpanded ? "w-64" : "w-20"}`} />
         </>
     );
 };

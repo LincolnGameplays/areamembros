@@ -33,9 +33,9 @@ export const Dashboard = () => {
             <Sidebar />
 
             {/* Main Content */}
-            <div className="flex-1 min-h-screen pb-20">
+            <div className="flex-1 w-full min-h-screen pb-20">
                 {/* Header */}
-                <header className="border-b border-white/5 bg-carbon/50 backdrop-blur-md sticky top-0 z-40">
+                <header className="border-b border-white/5 bg-carbon/50 backdrop-blur-md sticky top-0 z-30">
                     <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
                         <div className="flex items-center gap-4">
                             <div className="w-2 h-2 bg-cyan rounded-full animate-pulse" />
@@ -62,7 +62,7 @@ export const Dashboard = () => {
                     </div>
                 </header>
 
-                <main className="max-w-7xl mx-auto px-6 pt-12">
+                <main className="max-w-7xl mx-auto px-4 md:px-6 pt-12">
                     {/* Mission Status Panel */}
                     <motion.section
                         initial={{ opacity: 0, y: -20 }}

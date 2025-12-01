@@ -54,4 +54,10 @@
   .backdrop-blur-xl {
     -webkit-backdrop-filter: blur(24px);
   }
+
+  /* Prevent Scrolling When Mobile Menu Open */
+  .no-scroll {
+    overflow: hidden;
+    height: 100vh;
+  }
 }
